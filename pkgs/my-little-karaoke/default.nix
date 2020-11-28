@@ -1,4 +1,6 @@
-{ ultrastardx, fetchurl, stdenv, writeScript, bash, konsole }:
+{ ultrastardx, fetchurl, stdenv, writeScript, bash, konsole, makeDesktopItem }:
+
+#TODO: understand how downloading work, and add those directly in the package
 let
 	ultrastardx_folder = "~/.ultrastardx";
 
@@ -34,6 +36,14 @@ let
 		fi
 		${ultrastardx}/bin/ultrastardx
 	'';
+
+	desktop_file = makeDesktopItem {
+		name = "my-little-karaoke";
+		exec = "my-little-karaoke";
+		icon = "my-little-karaoke";
+		desktopName = "My Little Karaoke";
+		categories = "Game";
+	};
 in
 stdenv.mkDerivation {
 	name = "my-little-karaoke-downloader";
@@ -42,5 +52,6 @@ stdenv.mkDerivation {
 		mkdir -p $out/bin
 		ln -s ${updater_script} $out/bin/my-little-karaoke-downloader
 		ln -s ${startup_script} $out/bin/my-little-karaoke
+		cp -rf ${desktop_file}/share $out
 	'';
 }

@@ -1,4 +1,4 @@
-{ stdenv, stepmania, makeWrapper, patches ? [], name ? "with-patch", theme ? "", buildEnv }:
+{ stdenv, stepmania, makeWrapper, patches ? [], name ? "with-patch", theme ? "", buildEnv, makeDesktopItem }:
 
 let
 	stepmania-as-patch = stdenv.mkDerivation {
@@ -10,6 +10,14 @@ let
 			chmod +w -R $out/Songs
 			rm -r $out/Songs/*
 		'';
+	};
+
+	desktop = makeDesktopItem {
+		name = "trotmania-${name}";
+		exec = "trotmania-${name}";
+		icon = "trotmania-${name}e";
+		desktopName = "TrotMania (${name})";
+		categories = "Game";
 	};
 in
 stdenv.mkDerivation {
@@ -31,11 +39,8 @@ stdenv.mkDerivation {
 		rm $out/trotmania/stepmania
 		cp ${stepmania}/stepmania-*/stepmania $out/trotmania/stepmania
 		mkdir -p $out/bin
-		${if theme == "" then
-			"ln -s $out/trotmania/stepmania $out/bin/trotmania-${name}"
-		else ''
-			makeWrapper $out/trotmania/stepmania $out/bin/trotmania-${name} \
-				--add-flags "--theme=\"${theme}\""
-		''}
+		makeWrapper $out/trotmania/stepmania $out/bin/trotmania-${name} \
+			${if theme != "" then ''--add-flags "--theme=\"${theme}\""'' else ""}
+		cp -r ${desktop}/share $out
 	'';
 }

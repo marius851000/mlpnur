@@ -1,4 +1,4 @@
-{ fetchFromGitHub, stdenv, stdenvNoCC, aria2, p7zip, fetchurl,
+{ fetchFromGitHub, stdenv, stdenvNoCC, aria2, p7zip, fetchurl, makeDesktopItem,
 	SDL2, SDL2_ttf, SDL2_image, SDL2_mixer, curl, cryptopp, libav, tinyxml2 }:
 
 let
@@ -45,6 +45,14 @@ let
 		sha256 = "4fsrtAxdS+mfxIHJOlVxt8XcAl2pZHt1Lal2eBnyOMw=";
 	};
 
+	desktop_file = makeDesktopItem {
+		name = "my-little-investigation";
+		exec = "mli";
+		icon = "my-little-investigation";
+		desktopName = "My Little Investigation";
+		categories = "Game";
+	};
+
 	game_binary = stdenv.mkDerivation {
 		pname = "my-little-investigations";
 		version = "git";
@@ -67,6 +75,7 @@ let
 		installPhase = ''
 			mkdir -p $out/bin
 			cp bin/mli $out/bin
+			cp -r ${desktop_file}/share $out
 		'';
 
 		enableParallelBuilding = true;
