@@ -1,4 +1,4 @@
-{ fetchFromGitHub, stdenv, stdenvNoCC, aria2, p7zip,
+{ fetchFromGitHub, stdenv, stdenvNoCC, aria2, p7zip, fetchurl,
 	SDL2, SDL2_ttf, SDL2_image, SDL2_mixer, curl, cryptopp, libav, tinyxml2 }:
 
 let
@@ -50,7 +50,14 @@ let
 		version = "git";
 		src = game_source;
 
-		patchPhase = ''
+		patches = [
+			(fetchurl {
+				url = "https://github.com/GabuEx/my-little-investigations/pull/44.patch";
+				sha256 = "bf6rBr6593ERFKD/D47YgIVF2k+AqCVeOu9oGKWibXA=";
+			})
+		];
+
+		postPatch = ''
 			substituteInPlace src/FileFunctions.cpp \
 				--replace /usr/share/MyLittleInvestigations ${data_extracted} \
 				--replace "localizedCommonResourcesFilePaths)" '"${data_extracted}/Languages/")'
