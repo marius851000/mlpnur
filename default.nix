@@ -41,4 +41,6 @@ in rec {
 
 		shrive = pkgs.callPackage ./pkgs/trotmania/shrive.nix { inherit fetchmega qol_full course_full; };
 	};
+
+	my-little-karaoke = pkgs.callPackage ./pkgs/my-little-karaoke/default.nix {};
 }
