@@ -17,15 +17,16 @@ stdenv.mkDerivation {
 	version = stepmania.version;
 
 	nativeBuildInputs = [ makeWrapper ];
-	
+
 	phases = [ "installPhase" ];
 
 	installPhase = ''
 		mkdir $out
 		mkdir $out/trotmania
 		ln -s ${buildEnv {
-			paths = [ stepmania-as-patch ] ++ patches;
 			name = "trotmania-${name}-buildenv";
+			paths = patches ++ [ stepmania-as-patch ];
+			ignoreCollisions = true;
 		}}/* $out/trotmania
 		rm $out/trotmania/stepmania
 		cp ${stepmania}/stepmania-*/stepmania $out/trotmania/stepmania

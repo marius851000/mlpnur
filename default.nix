@@ -16,9 +16,20 @@ in rec {
 
 	trotmania-euphorius = trotmania.override { patches = [ trotmaniaPackage.euphorius  ]; name = "euphorius"; theme = "TM Euphorius"; };
 
+	trotmania-shrive = trotmania.override { patches = [ trotmaniaPackage.shrive ]; name = "shrive"; theme = "TM V"; };
+
+	trotmania-full = trotmania.override { patches = with trotmaniaPackage; [
+		rhythm-is-magic
+		chrystalize
+		aeternum-obscurum
+		euphorius
+		shrive
+	]; name = "full"; };
 
 	trotmaniaPackage = rec {
 		qol_full = pkgs.callPackage ./pkgs/trotmania/qol.nix { inherit fetchmega; };
+
+		course_full = pkgs.callPackage ./pkgs/trotmania/course.nix { inherit fetchmega; };
 
 		rhythm-is-magic = pkgs.callPackage ./pkgs/trotmania/rhythm-is-magic.nix { inherit qol_full; };
 
@@ -28,5 +39,6 @@ in rec {
 
 		euphorius = pkgs.callPackage ./pkgs/trotmania/euphorius.nix { inherit fetchmega qol_full; };
 
+		shrive = pkgs.callPackage ./pkgs/trotmania/shrive.nix { inherit fetchmega qol_full course_full; };
 	};
 }
