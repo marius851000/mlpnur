@@ -1,4 +1,4 @@
-{ fetchzip, fetchmega, stdenv, unzip, buildEnv }:
+{ fetchzip, fetchmega, stdenv, unzip, buildEnv, qol_full }:
 let
 	src = fetchzip {
 		url = "https://www.mylittlekaraoke.com/trotmania/V/TrotMania%20III.zip";
@@ -28,7 +28,22 @@ let
 			ln -s ${src} $out/Songs/TrotMania\ III
 		'';
 	};
+
+	qol = stdenv.mkDerivation {
+		name = "aeternum-obscurum-qol";
+		phases = "installPhase";
+		installPhase = ''
+			mkdir -p $out/Songs
+			ln -s ${qol_full}/Songs/TrotMania\ III $out/Songs/TrotMania\ III
+		'';
+	};
+
+	data = buildEnv {
+		name = "aeternum-obscurum-data";
+		paths = [ music_patch theme_patch ];
+	};
 in buildEnv {
-	name = "aeternum-obscurum-data";
-	paths = [ music_patch theme_patch ];
+	name = "aeternum-obscurum-patched";
+	paths = [ qol data ];
+	ignoreCollisions = true;
 }
