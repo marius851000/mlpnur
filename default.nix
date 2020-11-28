@@ -17,8 +17,10 @@ in rec {
 	trotmania-euphorius = trotmania.override { patches = [ trotmaniaPackage.euphorius  ]; name = "euphorius"; theme = "TM Euphorius"; };
 
 
-	trotmaniaPackage = {
-		rhythm-is-magic = pkgs.callPackage ./pkgs/trotmania/rhythm-is-magic.nix {};
+	trotmaniaPackage = rec {
+		qol_full = pkgs.callPackage ./pkgs/trotmania/qol.nix { inherit fetchmega; };
+
+		rhythm-is-magic = pkgs.callPackage ./pkgs/trotmania/rhythm-is-magic.nix { inherit qol_full; };
 
 		chrystalize = pkgs.callPackage ./pkgs/trotmania/chrystalize.nix {};
 
