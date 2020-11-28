@@ -14,6 +14,8 @@ in rec {
 
 	trotmania-aeternum-obscurum = trotmania.override { patches = [ trotmaniaPackage.aeternum-obscurum  ]; name = "aeternum-obscurum"; theme = "TrotMania3"; };
 
+	trotmania-euphorius = trotmania.override { patches = [ trotmaniaPackage.euphorius  ]; name = "euphorius"; theme = "TM Euphorius"; };
+
 
 	trotmaniaPackage = {
 		rhythm-is-magic = pkgs.callPackage ./pkgs/trotmania/rhythm-is-magic.nix {};
@@ -21,5 +23,8 @@ in rec {
 		chrystalize = pkgs.callPackage ./pkgs/trotmania/chrystalize.nix {};
 
 		aeternum-obscurum = pkgs.callPackage ./pkgs/trotmania/aeternum-obscurum.nix { inherit fetchmega; };
+
+		euphorius = pkgs.callPackage ./pkgs/trotmania/euphorius.nix { inherit fetchmega; };
+
 	};
 }
