@@ -1,4 +1,4 @@
-{ fetchurl, stdenv, fetchmega, unzip, buildEnv, fetchzip }:
+{ fetchurl, stdenv, fetchmega, unzip, buildEnv, fetchzip, qol_full }:
 let
 	# I have some issue with fetchzip (due to permission error)
 	music_src = fetchurl {
@@ -65,7 +65,21 @@ let
 		'';
 	};
 
+	qol = stdenv.mkDerivation {
+		name = "euphorius-qol";
+		phases = "installPhase";
+		installPhase = ''
+			mkdir -p $out/Songs
+			ln -s ${qol_full}/Songs/TrotMania\ IV $out/Songs/TrotMania\ IV
+		'';
+	};
+
+	data = buildEnv {
+		name = "euphorius-data";
+		paths = [ music theme mod_lab trials ];
+	};
 in buildEnv {
-	name = "euphorius-data";
-	paths = [ music theme mod_lab trials ];
+	name = "euphorius-patched";
+	paths = [ qol data ];
+	ignoreCollisions = true;
 }
