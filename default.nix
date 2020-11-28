@@ -33,7 +33,7 @@ in rec {
 
 		rhythm-is-magic = pkgs.callPackage ./pkgs/trotmania/rhythm-is-magic.nix { inherit qol_full course_full; };
 
-		chrystalize = pkgs.callPackage ./pkgs/trotmania/chrystalize.nix { inherit qol_full; };
+		chrystalize = pkgs.callPackage ./pkgs/trotmania/chrystalize.nix { inherit qol_full course_full; };
 
 		aeternum-obscurum = pkgs.callPackage ./pkgs/trotmania/aeternum-obscurum.nix { inherit fetchmega qol_full; };
 
