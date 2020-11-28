@@ -1,4 +1,4 @@
-{ stdenv, stepmania, patches ? [], name ? "with-patch", buildEnv }:
+{ stdenv, stepmania, makeWrapper, patches ? [], name ? "with-patch", theme ? "", buildEnv }:
 
 let
 	stepmania-as-patch = stdenv.mkDerivation {
@@ -16,6 +16,8 @@ stdenv.mkDerivation {
 	pname = "trotmania-${name}";
 	version = stepmania.version;
 
+	nativeBuildInputs = [ makeWrapper ];
+	
 	phases = [ "installPhase" ];
 
 	installPhase = ''
@@ -28,6 +30,11 @@ stdenv.mkDerivation {
 		rm $out/trotmania/stepmania
 		cp ${stepmania}/stepmania-*/stepmania $out/trotmania/stepmania
 		mkdir -p $out/bin
-		ln -s $out/trotmania/stepmania $out/bin/trotmania-${name}
+		${if theme == "" then
+			"ln -s $out/trotmania/stepmania $out/bin/trotmania-${name}"
+		else ''
+			makeWrapper $out/trotmania/stepmania $out/bin/trotmania-${name} \
+				--add-flags "--theme=\"${theme}\""
+		''}
 	'';
 }
