@@ -1,4 +1,4 @@
-{ stdenv, fetchzip, qol_full, buildEnv }:
+{ stdenv, fetchzip, qol_full, buildEnv, course_full }:
 
 let
 	trotmania_I = fetchzip {
@@ -14,13 +14,25 @@ let
 			ln -s ${qol_full}/Songs/TrotMania $out/Songs/TrotMania
 		'';
 	};
-	data = stdenv.mkDerivation {
-		name = "rhythm-is-magic-data";
+	course = stdenv.mkDerivation {
+		name = "rhythm-is-magic-course";
+		phases = "installPhase";
+		installPhase = ''
+			mkdir -p $out/Courses
+			ln -s ${course_full}/Courses/TrotMania $out/Courses/TrotMania
+		'';
+	};
+	music = stdenv.mkDerivation {
+		name = "rhythm-is-magic-music";
 		phases = "installPhase";
 		installPhase = ''
 			mkdir -p $out/Songs
 			ln -s ${trotmania_I} $out/Songs/TrotMania
 		'';
+	};
+	data = buildEnv {
+		name = "rhythm-is-magic-datat";
+		paths = [ music course ];
 	};
 in
 	buildEnv {

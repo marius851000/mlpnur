@@ -31,7 +31,7 @@ in rec {
 
 		course_full = pkgs.callPackage ./pkgs/trotmania/course.nix { inherit fetchmega; };
 
-		rhythm-is-magic = pkgs.callPackage ./pkgs/trotmania/rhythm-is-magic.nix { inherit qol_full; };
+		rhythm-is-magic = pkgs.callPackage ./pkgs/trotmania/rhythm-is-magic.nix { inherit qol_full course_full; };
 
 		chrystalize = pkgs.callPackage ./pkgs/trotmania/chrystalize.nix { inherit qol_full; };
 
