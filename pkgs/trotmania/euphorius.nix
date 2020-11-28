@@ -1,4 +1,4 @@
-{ fetchurl, stdenv, fetchmega, unzip, buildEnv, fetchzip, qol_full }:
+{ fetchurl, stdenv, fetchmega, unzip, buildEnv, fetchzip, qol_full, course_full }:
 let
 	# I have some issue with fetchzip (due to permission error)
 	music_src = fetchurl {
@@ -74,9 +74,18 @@ let
 		'';
 	};
 
+	course = stdenv.mkDerivation {
+		name = "euphorius-course";
+		phases = "installPhase";
+		installPhase = ''
+			mkdir -p $out/Courses
+			ln -s ${course_full}/Courses/Euphorius $out/Courses/Euphorius
+		'';
+	};
+
 	data = buildEnv {
 		name = "euphorius-data";
-		paths = [ music theme mod_lab trials ];
+		paths = [ music theme mod_lab trials course ];
 	};
 in buildEnv {
 	name = "euphorius-patched";

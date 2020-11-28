@@ -37,7 +37,7 @@ in rec {
 
 		aeternum-obscurum = pkgs.callPackage ./pkgs/trotmania/aeternum-obscurum.nix { inherit fetchmega qol_full course_full; };
 
-		euphorius = pkgs.callPackage ./pkgs/trotmania/euphorius.nix { inherit fetchmega qol_full; };
+		euphorius = pkgs.callPackage ./pkgs/trotmania/euphorius.nix { inherit fetchmega qol_full course_full; };
 
 		shrive = pkgs.callPackage ./pkgs/trotmania/shrive.nix { inherit fetchmega qol_full course_full; };
 	};
