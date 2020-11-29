@@ -13,6 +13,8 @@ let
 	data = callPackage ./data.nix { };
 
 	mlk = ultrastardx.overrideAttrs (oldAttrs: {
+		name = "my-little-karaoke";
+		
 		prePatch = (oldAttrs.prePatch or "") + ''
 			substituteInPlace src/base/UIni.pas \
 				--replace \'Modern\' \'MyLittleKaraoke\'
