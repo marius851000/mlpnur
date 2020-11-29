@@ -1,42 +1,7 @@
-{ ultrastardx, fetchurl, stdenv, writeScript, bash, konsole, makeDesktopItem }:
+{ ultrastardx, fetchurl, stdenv, writeScript, bash, konsole, makeDesktopItem,
+	callPackage, buildEnv }:
 
-#TODO: understand how downloading work, and add those directly in the package
 let
-	ultrastardx_folder = "~/.ultrastardx";
-
-	download_script_unpatched = fetchurl {
-		name = "downloader.sh";
-		url = "http://djazz.se/nas/games/?dl=my-little-karaoke-songs";
-		sha256 = "RJCbUEWYqEOklTQuIvlz2+p0MNli7W8UyWg0s+Ou9pc=";
-	};
-
-	download_script = stdenv.mkDerivation {
-		phases = ["buildPhase" "installPhase"];
-		name = "downloader_patched.sh";
-		buildPhase = ''
-			cp ${download_script_unpatched} downloader.sh
-			substituteInPlace downloader.sh \
-				--replace "echo \"You can now close this window.\"" ""
-		'';
-		installPhase = "cp downloader.sh $out";
-	};
-
-	updater_script = writeScript "updater.sh" ''#!${bash}/bin/bash
-		bash ${download_script} ${ultrastardx_folder}
-		echo "download finished"
-	'';
-
-	startup_script = writeScript "start_mlk.sh" ''#!${bash}/bin/bash
-		if test -f ${ultrastardx_folder}/.nixmlk_downloaded; then
-			echo "no download of my little karaoke required"
-		else
-			echo "downloading the data, opening a graphical terminal"
-			${konsole}/bin/konsole -e bash ${updater_script}
-			touch ${ultrastardx_folder}/.nixmlk_downloaded
-		fi
-		${ultrastardx}/bin/ultrastardx
-	'';
-
 	desktop_file = makeDesktopItem {
 		name = "my-little-karaoke";
 		exec = "my-little-karaoke";
@@ -44,14 +9,26 @@ let
 		desktopName = "My Little Karaoke";
 		categories = "Game";
 	};
-in
-stdenv.mkDerivation {
-	name = "my-little-karaoke-downloader";
-	phases = "installPhase";
-	installPhase = ''
-		mkdir -p $out/bin
-		ln -s ${updater_script} $out/bin/my-little-karaoke-downloader
-		ln -s ${startup_script} $out/bin/my-little-karaoke
-		cp -rf ${desktop_file}/share $out
-	'';
-}
+
+	data = callPackage ./data.nix { };
+
+	mlk = ultrastardx.overrideAttrs (oldAttrs: {
+		prePatch = (oldAttrs.prePatch or "") + ''
+			substituteInPlace src/base/UIni.pas \
+				--replace \'Modern\' \'MyLittleKaraoke\'
+		'';
+
+		postInstall = (oldAttrs.postInstall or "") + ''
+			rm -r $out/share/ultrastardx/avatars
+			ln -s ${data}/avatars $out/share/ultrastardx/avatars
+			ln -s ${data}/songs $out/share/ultrastardx/songs
+			#rm -r $out/share/ultrastardx/themes/
+			cp -rf ${data}/themes/* $out/share/ultrastardx/themes
+			chmod +w $out/share/ultrastardx/themes/MyLittleKaraoke.ini
+			cat ${./patch_theme.ini} >> $out/share/ultrastardx/themes/MyLittleKaraoke.ini
+			cp $out/bin/ultrastardx $out/bin/my-little-karaoke
+		'';
+
+		dontStrip = true;
+	});
+in mlk

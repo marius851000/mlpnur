@@ -6,6 +6,7 @@ in rec {
 	# tool
 	fetchmega = pkgs.callPackage ./pkgs/tool/fetchmega.nix {};
 
+	# games
 	my-little-investigation = pkgs.callPackage ./pkgs/my-little-investigation {};
 
 	trotmania-rhythm-is-magic = trotmania.override { patches = [ trotmaniaPackage.rhythm-is-magic ]; name = "rhythm-is-magic"; };
