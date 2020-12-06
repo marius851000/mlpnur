@@ -14,7 +14,7 @@ let
 
 	mlk = ultrastardx.overrideAttrs (oldAttrs: {
 		name = "my-little-karaoke";
-		
+
 		prePatch = (oldAttrs.prePatch or "") + ''
 			substituteInPlace src/base/UIni.pas \
 				--replace \'Modern\' \'MyLittleKaraoke\'
@@ -28,7 +28,7 @@ let
 			cp -rf ${data}/themes/* $out/share/ultrastardx/themes
 			chmod +w $out/share/ultrastardx/themes/MyLittleKaraoke.ini
 			cat ${./patch_theme.ini} >> $out/share/ultrastardx/themes/MyLittleKaraoke.ini
-			cp $out/bin/ultrastardx $out/bin/my-little-karaoke
+			mv $out/bin/ultrastardx $out/bin/my-little-karaoke
 		'';
 
 		dontStrip = true;

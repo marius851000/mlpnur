@@ -1,4 +1,4 @@
-{ stdenv, curl, gnutar, cacert, buildEnv }:# files to download are stored at https://www.mylittlekaraoke.com/store/webinst/linux.webinst
+{ stdenv, curl, gnutar, cacert, buildEnv, lib }:# files to download are stored at https://www.mylittlekaraoke.com/store/webinst/linux.webinst
 # under the form url\nsize\nrepeat
 let
 	fetchmlk = {
@@ -41,6 +41,7 @@ let
 		outputHashAlgo = "sha256";
 	};
 
+	# buildEnv make so the first have priority under the second. The order of data is the inverse (last one should be the most recent. The order is reversed later)
 	datas = [
 		["https://www.mylittlekaraoke.com/store/webinst/AC3-base1.tar.mlk" "ViKgpQqG06X2T5sKUZAUdn7kunpvzZ3t8Jr7/zLsvTY="]
 		["https://www.mylittlekaraoke.com/store/webinst/AC3-base2.tar.mlk" "3Wx5r3oanp2GtqMdLFsQQTC2dC6ITFTcWW8kIn/W1FI="]
@@ -94,6 +95,6 @@ let
 	datas_downloaded = map (entry: fetchmlk { url = builtins.head entry; sha256 = builtins.elemAt entry 1; }) datas;
 in buildEnv {
 	name = "my-little-karaoke-data";
-	paths = datas_downloaded;
+	paths = lib.reverseList datas_downloaded;
 	ignoreCollisions = true;
 }
