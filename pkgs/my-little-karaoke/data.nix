@@ -1,45 +1,7 @@
-{ stdenv, curl, gnutar, cacert, buildEnv, lib }:# files to download are stored at https://www.mylittlekaraoke.com/store/webinst/linux.webinst
+{ buildEnv, lib, callPackage, beta ? false }:# files to download are stored at https://www.mylittlekaraoke.com/store/webinst/linux.webinst
 # under the form url\nsize\nrepeat
 let
-	fetchmlk = {
-		url,
-		sha256,
-	}: stdenv.mkDerivation {
-		inherit url;
-		name = "${baseNameOf (toString (url))}-unpacked";
-		nativeBuildInputs = [ curl gnutar ];
-		phases = [ "buildPhase" "installPhase" ];
-		buildPhase = ''
-			file=$(basename $url)
-			curl -o $file -L $url
-		'';
-		installPhase =''
-			case $file in
-				*.mlk)
-					mkdir -p $out/songs
-					tar -xf "$file" -C $out/songs
-					;;
-				*.mlt)
-					mkdir -p $out/themes
-					tar -xf "$file" -C $out/themes
-					;;
-				*.mlu)
-					mkdir -p $out
-					tar -xf "$file" -C $out
-					;;
-				*)
-					echo "unknown file extension for $file"
-					exit -1
-					;;
-			esac
-		'';
-
-		SSL_CERT_FILE = "${cacert}/etc/ssl/certs/ca-bundle.crt";
-
-		outputHashMode = "recursive";
-		outputHash = sha256;
-		outputHashAlgo = "sha256";
-	};
+	fetchmlk = callPackage ./fetchmlk.nix { };
 
 	# buildEnv make so the first have priority under the second. The order of data is the inverse (last one should be the most recent. The order is reversed later)
 	datas = [
@@ -93,8 +55,16 @@ let
 	];
 
 	datas_downloaded = map (entry: fetchmlk { url = builtins.head entry; sha256 = builtins.elemAt entry 1; }) datas;
+
+	beta_downloaded = map (x: fetchmlk {
+			url = builtins.elemAt x 0;
+			name = builtins.elemAt x 1;
+			sha256 = builtins.elemAt x 2;
+		})
+		(lib.importJSON ./beta.json);
+
 in buildEnv {
 	name = "my-little-karaoke-data";
-	paths = lib.reverseList datas_downloaded;
+	paths = lib.reverseList (datas_downloaded ++ (if beta then beta_downloaded else []));
 	ignoreCollisions = true;
 }
