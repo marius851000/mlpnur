@@ -46,4 +46,6 @@ in rec {
 	my-little-karaoke = pkgs.callPackage ./pkgs/my-little-karaoke/default.nix { beta = false; };
 
 	my-little-karaoke-beta = pkgs.callPackage ./pkgs/my-little-karaoke/default.nix { beta = true; };
+
+	patapony = pkgs.callPackage ./pkgs/patapony/patapony.nix {};
 }
