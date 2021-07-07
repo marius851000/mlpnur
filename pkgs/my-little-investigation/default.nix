@@ -18,13 +18,13 @@ let
 			cp ./MyLittleInvestigationsInstaller1.1.0.exe $out
 		'';
 
-		outputHashMode = "recursive";
-		outputHash = "WCkwOi2fayohadc2LTUj2vV+xihWo9O2V77+QWkNKWI=";
+		outputHashMode = "flat";
+		outputHash = "1bl132d0ry9xlrvlhg6701xd1bgws8dvr6gi8jfip3lvrik80z72";
 		outputHashAlgo = "sha256";
 	};
 
 	data_extracted = stdenvNoCC.mkDerivation {
-		name = "my-little-investagation-data-unpacked";
+		name = "my-little-investigation-data-unpacked";
 
 		nativeBuildInputs = [ p7zip ];
 
