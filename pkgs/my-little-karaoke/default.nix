@@ -26,8 +26,6 @@ let
 			ln -s ${data}/songs $out/share/ultrastardx/songs
 			#rm -r $out/share/ultrastardx/themes/
 			cp -rf ${data}/themes/* $out/share/ultrastardx/themes
-			chmod +w $out/share/ultrastardx/themes/MyLittleKaraoke.ini
-			cat ${./patch_theme.ini} >> $out/share/ultrastardx/themes/MyLittleKaraoke.ini
 			mv $out/bin/ultrastardx $out/bin/my-little-karaoke${if beta then "-beta" else ""}
 			cp -r ${desktop_file}/share $out
 		'';
