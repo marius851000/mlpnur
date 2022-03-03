@@ -50,7 +50,7 @@ let
 		exec = "mli";
 		icon = "my-little-investigation";
 		desktopName = "My Little Investigation";
-		categories = "Game";
+		categories = ["Game" "AdventureGame" "LogicGame"];
 	};
 
 	game_binary = stdenv.mkDerivation {

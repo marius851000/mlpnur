@@ -7,7 +7,7 @@ let
 		exec = "my-little-karaoke" + (if beta then "-beta" else "");
 		icon = "my-little-karaoke";
 		desktopName = "My Little Karaoke" + (if beta then " (beta)" else "");
-		categories = "Game";
+		categories = ["Game" "ArcadeGame"];
 	};
 
 	data = callPackage ./data.nix { inherit beta; };

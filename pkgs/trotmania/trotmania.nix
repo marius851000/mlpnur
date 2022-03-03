@@ -17,7 +17,7 @@ let
 		exec = "trotmania-${name}";
 		icon = "trotmania-${name}e";
 		desktopName = "TrotMania (${name})";
-		categories = "Game";
+		categories = ["Game" "ArcadeGame"];
 	};
 in
 stdenv.mkDerivation {
