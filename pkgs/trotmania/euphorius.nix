@@ -19,19 +19,17 @@ let
 		outputHashAlgo = "sha256";
 	};
 
-	theme_src = fetchmega {
-		url = "https://mega.nz/file/bhoklD7b#Sh6cQplXOjzTmmg7H0nIgc8T2ZjXfFLZIrhnk4_6XpM";
-		sha256 = "0kpuwiS/2HCO418NT3JVSZnw1OWpc2bWuo0qvtk+40E=";
-	};
-
-	theme = stdenv.mkDerivation {
+	theme = fetchmega {
 		name = "euphorius-theme";
-		src = "${theme_src}/*.zip";
+		url = "https://mega.nz/file/bhoklD7b#Sh6cQplXOjzTmmg7H0nIgc8T2ZjXfFLZIrhnk4_6XpM";
+		sha256 = "sha256-sDxsDwZSLky/gSe1rkf2UPSaKzLP6KdT8wFbr/8NxiQ=";
 		nativeBuildInputs = [ unzip ];
 		installPhase = ''
-			rm README.txt
-			mkdir -p $out
-			cp -r * $out
+			mkdir out
+			cd out
+			unzip ../*.zip
+			rm */README.txt
+			mv * $out
 		'';
 	};
 
