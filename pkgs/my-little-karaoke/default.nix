@@ -1,4 +1,4 @@
-{ ultrastardx, fetchurl, stdenv, writeScript, bash, konsole, makeDesktopItem,
+{ ultrastardx, fetchurl, stdenv, writeScript, bash, makeDesktopItem,
 	callPackage, buildEnv, beta ? false }:
 
 let
